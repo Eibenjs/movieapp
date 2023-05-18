@@ -5,6 +5,7 @@ const MovieContext = createContext();
 
 const defaultStates = {
   movies: [],
+  adminMovies: [],
 }
 
 const cartReducer = (state, action) => {
@@ -18,6 +19,15 @@ const cartReducer = (state, action) => {
       ...state,
       movies: action.payload
     }
+  }
+  if(action.type === "SET_ADMIN_MOVIES") {
+    return {
+      ...state,
+      adminMovies: action.payload
+    }
+  }
+  if(action.type === "SET_DEFAULT"){
+    return defaultStates;
   }
   return defaultStates;
 };

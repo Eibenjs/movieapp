@@ -1,9 +1,25 @@
-import { Outlet, NavLink, Link } from "react-router-dom";
+import { useNavigate, Outlet, NavLink, Link } from "react-router-dom";
 
 import { useToken } from "../Store/tokenContext";
+const HomeLayout = ({toggleRefresh}) => {
+  const { token, setToken } = useToken();
+  const navigate = useNavigate();
+  const onLogout = () => {
+    const requestOptions = {
+      method: "GET",
+      credentials: "include",
+    };
 
-const HomeLayout = () => {
-  const { token } = useToken();
+    fetch(`http://localhost:8080/logout`, requestOptions)
+      .catch((error) => {
+        console.log(error);
+      })
+      .finally(() => {
+        setToken(null);
+        toggleRefresh(false);
+      });
+    navigate("/login");
+  };
 
   return (
     <div className="px-32 py-4">
@@ -33,7 +49,7 @@ const HomeLayout = () => {
           >
             [Genres]
           </NavLink>
-          {token !== "" && (
+          {token !== null && (
             <>
               <NavLink
                 className={({ isActive, isPending }) =>
@@ -63,7 +79,11 @@ const HomeLayout = () => {
           )}
         </div>
         <div>
-          {token === "" ? <Link to="/login">Login</Link> : <Link to="/logout">Logout</Link>}
+          {token === null ? (
+            <Link to="/login">Login</Link>
+          ) : (
+            <button onClick={onLogout}>Logout</button>
+          )}
         </div>
       </div>
       <Outlet />

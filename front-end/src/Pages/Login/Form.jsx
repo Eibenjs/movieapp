@@ -12,7 +12,7 @@ const LoginForm = () => {
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const { setToken } = useToken();
+  const { setToken, toggleRefresh } = useToken();
 
   const onSubmit = (data) => {
     // build the request payload
@@ -26,6 +26,7 @@ const LoginForm = () => {
       headers: {
         "Content-Type": "application/json",
       },
+      credentials: "include",
       body: JSON.stringify(payload),
     };
 
@@ -35,9 +36,10 @@ const LoginForm = () => {
       .then((data) => {
         console.log(data)
         if (data.error) {
-          alert(data.error);
+          alert(data.message);
         } else {
           setToken(data.access_token);
+          toggleRefresh(true);
           navigate("/");
         }
       })
