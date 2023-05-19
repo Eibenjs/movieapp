@@ -1,10 +1,17 @@
-import { useContext, createContext, useState, useCallback, useEffect } from "react";
+import {
+  useContext,
+  createContext,
+  useState,
+  useCallback,
+  useEffect,
+} from "react";
 import PropTypes from "prop-types";
 
 const TokenContext = createContext();
 
 const TokenProvider = ({ children }) => {
   const [token, setToken] = useState(null);
+  const [checkToken, setCheckToken] = useState(false);
   const [tickingInterval, setTickInterval] = useState(null);
 
   const toggleRefresh = useCallback(
@@ -15,7 +22,7 @@ const TokenProvider = ({ children }) => {
             method: "GET",
             credentials: "include",
           };
-    
+
           fetch(`http://localhost:8080/refresh`, requestOptions)
             .then((response) => response.json())
             .then((data) => {
@@ -51,6 +58,9 @@ const TokenProvider = ({ children }) => {
             toggleRefresh(true);
           }
         })
+        .finally(() => {
+          setCheckToken(true);
+        })
         .catch((error) => {
           console.log("user not logged in", error);
         });
@@ -64,6 +74,7 @@ const TokenProvider = ({ children }) => {
         setToken,
         tickingInterval,
         toggleRefresh,
+        checkToken,
       }}
     >
       {children}

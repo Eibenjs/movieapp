@@ -17,22 +17,27 @@ import ManageCatalog from "./Pages/ManageCatalog/ManageCatalog";
 import LoginForm from "./Pages/Login/Form";
 
 function App() {
-  const { toggleRefresh } = useToken();
+  const { toggleRefresh, checkToken } = useToken();
 
   return (
     <>
-      <Routes>
-        <Route path="/" element={<HomeLayout toggleRefresh={toggleRefresh} />}>
-          <Route index={true} element={<h1>Home</h1>} />
-          <Route path="/movies" element={<Movies></Movies>} />
-          <Route path="/movies/:id" element={<Movie></Movie>} />
-          <Route path="/genres" element={<h1>Genres</h1>} />
-          <Route path="/admin/movie/:id" element={<h1>Admin Movie</h1>} />
-          <Route path="/manage-catalogue" element={<ManageCatalog />} />"
-          <Route path="*" element={<h1>Not Found</h1>} />
-        </Route>
-        <Route path="/login" element={<LoginForm />} />
-      </Routes>
+      {checkToken && (
+        <Routes>
+          <Route
+            path="/"
+            element={<HomeLayout toggleRefresh={toggleRefresh} />}
+          >
+            <Route index={true} element={<h1>Home</h1>} />
+            <Route path="/movies" element={<Movies></Movies>} />
+            <Route path="/movies/:id" element={<Movie></Movie>} />
+            <Route path="/genres" element={<h1>Genres</h1>} />
+            <Route path="/admin/movie/:id" element={<h1>Admin Movie</h1>} />
+            <Route path="/manage-catalogue" element={<ManageCatalog />} />"
+            <Route path="*" element={<h1>Not Found</h1>} />
+          </Route>
+          <Route path="/login" element={<LoginForm />} />
+        </Routes>
+      )}
     </>
   );
 }
